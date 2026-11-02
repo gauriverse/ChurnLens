@@ -1,0 +1,13 @@
+.venv/
+pycache/
+.pyc
+.ipynb_checkpoints/
+.env
+node_modules/
+dist/
+.vscode/
+data/raw/
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+artifacts/*.joblib
