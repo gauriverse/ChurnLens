@@ -1,0 +1,25 @@
+{
+  "unit": "mean absolute SHAP value, log-odds scale",
+  "baseline_log_odds": -0.6713,
+  "importance": {
+    "tenure": 1.0282,
+    "InternetService": 0.5895,
+    "MonthlyCharges": 0.5879,
+    "Contract": 0.5475,
+    "TotalCharges": 0.4091,
+    "StreamingMovies": 0.2357,
+    "StreamingTV": 0.2247,
+    "OnlineSecurity": 0.1911,
+    "PaymentMethod": 0.1708,
+    "TechSupport": 0.1645,
+    "PaperlessBilling": 0.1623,
+    "MultipleLines": 0.1612,
+    "OnlineBackup": 0.109,
+    "DeviceProtection": 0.1064,
+    "Dependents": 0.0965,
+    "SeniorCitizen": 0.042,
+    "gender": 0.0158,
+    "Partner": 0.0092,
+    "PhoneService": 0.0044
+  }
+}
