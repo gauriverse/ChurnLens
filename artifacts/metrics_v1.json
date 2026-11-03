@@ -1,0 +1,53 @@
+{
+  "model_version": "v1",
+  "algorithm": "logistic_regression + sigmoid calibration",
+  "training_rows": 5634,
+  "test_rows": 1409,
+  "threshold": 0.2,
+  "cost_assumptions": {
+    "offer_cost": 40,
+    "success_rate": 0.3,
+    "horizon_months": 12,
+    "margin": 1.0
+  },
+  "cv_train": {
+    "roc_auc": 0.845,
+    "brier": 0.135
+  },
+  "test": {
+    "roc_auc": 0.842,
+    "pr_auc": 0.633,
+    "brier": 0.138,
+    "mean_predicted": 0.268,
+    "actual_churn_rate": 0.265,
+    "precision": 0.467,
+    "recall": 0.864,
+    "f1": 0.606,
+    "confusion_matrix": {
+      "tn": 666,
+      "fp": 369,
+      "fn": 51,
+      "tp": 323
+    }
+  },
+  "test_campaign_at_threshold": {
+    "threshold": 0.2,
+    "targeted": 692,
+    "churners_reached": 323,
+    "campaign_cost": 27680,
+    "estimated_retained": 96.89999999999999,
+    "revenue_preserved": 86560.73999999999,
+    "net_benefit": 58880.73999999999,
+    "roi": 2.1271943641618494
+  },
+  "test_campaign_contact_everyone": {
+    "threshold": 0.0,
+    "targeted": 1409,
+    "churners_reached": 374,
+    "campaign_cost": 56360,
+    "estimated_retained": 112.2,
+    "revenue_preserved": 97973.64,
+    "net_benefit": 41613.64,
+    "roi": 0.7383541518807665
+  }
+}
