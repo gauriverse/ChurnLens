@@ -26,3 +26,10 @@
 4. Features overlap (for example MonthlyCharges and InternetService), so individual hazard ratios can change when features are added or removed.
 5. Stratifying by Contract and charge band handles the assumption violations but removes hazard ratios for those variables.
 6. Survival curves describe groups. They are not individual time-to-churn predictions.
+
+## Customer lifetime value (revenue-based)
+- All figures are REVENUE, not profit. The dataset has no costs or margins.
+- Expected active months = area under the Kaplan-Meier survival curve (restricted mean survival time), estimated separately per contract type.
+- Lifetime revenue (72-month window) = expected active months x average monthly charge.
+- Forward 12-month revenue per customer = monthly charge x expected active months in the next 12, conditional on the customer having already survived to their current tenure.
+- Limits: curves are not estimated beyond 72 months, so the forward window is shortened for customers above 60 months of tenure (their value is understated). The estimate uses contract type and tenure only, and is an association-based estimate, not a guarantee.
