@@ -6,7 +6,7 @@ import pandas as pd
 from scipy.stats import spearmanr
 
 from churnlens.explainability.export import top_contributions_long
-from churnlens.explainability.reasons import explanation_text, top_reasons
+from churnlens.explainability.reasons import explanation_text, top_reasons,merge_for_display
 from churnlens.explainability.shap_explainer import explain
 from churnlens.features.preprocessing import FEATURES, TARGET
 from churnlens.models.pipelines import build_pipeline
@@ -39,10 +39,10 @@ long = top_contributions_long(grouped, X_all, df["customerID"].tolist(), n=5)
 long.to_csv(f"data/processed/explanations_{VERSION}.csv", index=False)
 
 
-texts = [
-    explanation_text(top_reasons(grouped.iloc[i], X_all.iloc[i]))
-    for i in range(len(df))
-]
+texts = []
+for i in range(len(df)):
+    contribs, customer = merge_for_display(grouped.iloc[i], X_all.iloc[i])
+    texts.append(explanation_text(top_reasons(contribs, customer)))
 pd.DataFrame({"customerID": df["customerID"], "reason_text": texts}).to_csv(
     f"data/processed/customer_reasons_{VERSION}.csv", index=False
 )
