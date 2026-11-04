@@ -1,7 +1,7 @@
 import pandas as pd
 
 from churnlens.explainability.reasons import (
-    explanation_text, strength, top_reasons,
+    explanation_text, strength, top_reasons, merge_for_display
 )
 
 CONTRIBUTIONS = pd.Series({
@@ -38,3 +38,16 @@ def test_text_mentions_actual_values_and_handles_empty_case():
     assert explanation_text({"increasing": [], "decreasing": []}) == (
         "No single factor stands out for this customer."
     )
+
+def test_merge_combines_entangled_features():
+    contributions = pd.Series(
+        {"tenure": 1.0, "MonthlyCharges": 0.5, "TotalCharges": -0.4, "Contract": 0.2}
+    )
+    customer = pd.Series(
+        {"tenure": 1, "MonthlyCharges": 29.85, "TotalCharges": 29.85,
+         "Contract": "Month-to-month"}
+    )
+    c, cust = merge_for_display(contributions, customer)
+    assert round(float(c["tenure and billing"]), 6) == 1.1
+    assert "tenure" not in c.index
+    assert cust["tenure and billing"] == "1 month, $29.85/month"

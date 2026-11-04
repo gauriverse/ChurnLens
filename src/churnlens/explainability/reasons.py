@@ -20,11 +20,31 @@ FEATURE_LABELS = {
     "PaymentMethod": "payment method",
 }
 
+MERGED_FOR_DISPLAY = {
+    "tenure and billing": ["tenure", "MonthlyCharges", "TotalCharges"],
+}
+
+
+def merge_for_display(contributions, customer):
+    """Combine overlapping features into one factor for the readable text."""
+    contributions = contributions.copy()
+    customer = customer.copy()
+    for label, parts in MERGED_FOR_DISPLAY.items():
+        contributions[label] = contributions[parts].sum()
+        customer[label] = (
+            f"{describe_value('tenure', customer['tenure'])}, "
+            f"${float(customer['MonthlyCharges']):,.2f}/month"
+        )
+        contributions = contributions.drop(parts)
+        customer = customer.drop(parts)
+    return contributions, customer
+
 
 def describe_value(feature, value):
     
     if feature == "tenure":
-        return f"{int(value)} months"
+        n = int(value)
+        return f"{n} month" if n == 1 else f"{n} months"
     if feature in ("MonthlyCharges", "TotalCharges"):
         return f"${float(value):,.2f}"
     if feature == "SeniorCitizen":
