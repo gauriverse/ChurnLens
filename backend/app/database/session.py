@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -10,3 +12,11 @@ def make_engine(url=None):
 
 def make_session_factory(engine):
     return sessionmaker(bind=engine, expire_on_commit=False)
+
+@lru_cache
+def get_engine():
+    return make_engine()
+
+@lru_cache
+def get_session_factory():
+    return make_session_factory(get_engine())
