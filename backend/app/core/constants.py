@@ -1,0 +1,1 @@
+EXPOSURE_HORIZON_MONTHS = 12  # assumption used for revenue exposure
