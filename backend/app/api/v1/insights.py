@@ -1,0 +1,26 @@
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.orm import Session
+
+from backend.app.api.deps import get_db
+from backend.app.schemas.insights import Insights
+from backend.app.services.insights import get_insights
+from backend.app.services.runs import resolve_run_id
+
+router = APIRouter(prefix="/insights", tags=["insights"])
+
+
+@router.get("", response_model=Insights)
+def read_insights(
+    contract: str | None = Query(None, max_length=50, description="Narrow every figure to one contract type"),
+    analysis_run_id: int | None = Query(None, description="Defaults to the latest completed run"),
+    db: Session = Depends(get_db),
+):
+    """Overview KPIs (each with its definition), breakdowns and survival curves."""
+    run_id = resolve_run_id(db, analysis_run_id)
+    if run_id is None:
+        raise HTTPException(status_code=404, detail="no completed analysis run found")
+
+    insights = get_insights(db, run_id, contract)
+    if insights is None:
+        raise HTTPException(status_code=404, detail="no customers match the filters")
+    return insights
