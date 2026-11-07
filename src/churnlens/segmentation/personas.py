@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
+from churnlens.segmentation.summary import priority_tier
 
 K = 5
 RANDOM_STATE = 42
@@ -68,15 +69,6 @@ def assign_names(profile):
             + str(names.to_dict())
         )
     return names
-
-
-def priority_tier(share):
-    """Display cutoffs chosen by the author, not statistical thresholds."""
-    if share >= 0.30:
-        return "High"
-    if share >= 0.10:
-        return "Medium"
-    return "Low"
 
 
 def add_revenue_at_risk(profile, df, labels, probabilities, horizon=HORIZON_MONTHS):
