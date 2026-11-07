@@ -11,6 +11,7 @@ from backend.app.models.tables import (
     PredictionExplanation, RetentionRecommendation, RetentionScenario, Segment,
 )
 from churnlens.evaluation.risk import risk_category
+from churnlens.segmentation.summary import characteristics
 
 VERSION = "v1"
 DATA = "data/processed"
@@ -125,7 +126,8 @@ with engine.begin() as conn:  # one transaction: all or nothing
          "churn_rate": float(r.churn_rate), "avg_monthly_charges": float(r.avg_monthly),
          "revenue_at_risk_12m": float(r.revenue_at_risk_12m),
          "share_of_revenue_at_risk": float(r.share_of_revenue_at_risk),
-         "retention_priority": int(r.retention_priority), "priority_tier": r.priority_tier}
+         "retention_priority": int(r.retention_priority), "priority_tier": r.priority_tier,
+         "characteristics": characteristics(r.asdict())}
         for r in segments.itertuples(index=False)
     ])
     segment_of = dict(conn.execute(
