@@ -1,19 +1,13 @@
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
-ID_COLUMN = "customerID"
-TARGET = "Churn"
-
-NUMERIC_FEATURES = ["tenure", "MonthlyCharges", "TotalCharges", "SeniorCitizen"]
-
-CATEGORICAL_FEATURES = [
-    "gender", "Partner", "Dependents", "PhoneService", "MultipleLines",
-    "InternetService", "OnlineSecurity", "OnlineBackup", "DeviceProtection",
-    "TechSupport", "StreamingTV", "StreamingMovies", "Contract",
-    "PaperlessBilling", "PaymentMethod",
-]
-
-FEATURES = NUMERIC_FEATURES + CATEGORICAL_FEATURES
+from churnlens.features.schema import (  # noqa: F401
+    CATEGORICAL_FEATURES,
+    FEATURES,
+    ID_COLUMN,
+    NUMERIC_FEATURES,
+    TARGET,
+)
 
 def build_preprocessor():
     """Scale numeric columns and one-hot encode categorical columns"""
