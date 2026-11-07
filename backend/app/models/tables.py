@@ -182,6 +182,7 @@ class Segment(Base):
     share_of_revenue_at_risk: Mapped[float] = mapped_column(Float)
     retention_priority: Mapped[int] = mapped_column(Integer)
     priority_tier: Mapped[str] = mapped_column(String(10))
+    characteristics: Mapped[dict | None] = mapped_column(JsonType)
 
 
 class CustomerSegment(Base):
