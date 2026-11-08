@@ -1,9 +1,15 @@
-from fastapi import FastAPI
+import logging
+
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from sqlalchemy.exc import OperationalError
 
 from backend.app.api import health
 from backend.app.api.v1.router import api_router
 from backend.app.core.config import get_cors_origins
+
+logger = logging.getLogger("uvicorn.error")
 
 def create_app() -> FastAPI:
     app = FastAPI(
@@ -21,6 +27,20 @@ def create_app() -> FastAPI:
         allow_methods=["GET", "POST"],
         allow_headers=["*"],
     )
+
+    @app.exception_handler(OperationalError)
+    async def database_unavailable(request: Request, exc: OperationalError):
+        
+        logger.error(
+            "database unavailable during %s %s: %s", request.method, request.url.path, exc.orig
+        )
+        return JSONResponse(
+            status_code=503,
+            content={"detail": "database temporarily unavailable, please retry"},
+            headers={"Retry-After": "5"},
+        )
+
+
     app.include_router(health.router)
     app.include_router(api_router, prefix="/api/v1")
     return app
