@@ -1,4 +1,5 @@
 .venv/
+.venv-api/
 *pycache/
 *.pyc
 .ipynb_checkpoints/
@@ -12,6 +13,6 @@ data/processed/*
 !data/processed/.gitkeep
 artifacts/*.joblib
 !artifacts/churn_model_v1.joblib
+!artifacts/segmentation_v1.joblib
 *.egg-info/
 .pytest_cache/
-artifacts/churn_model_v1.joblib
