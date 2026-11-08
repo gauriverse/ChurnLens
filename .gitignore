@@ -16,3 +16,4 @@ artifacts/*.joblib
 !artifacts/segmentation_v1.joblib
 *.egg-info/
 .pytest_cache/
+build/

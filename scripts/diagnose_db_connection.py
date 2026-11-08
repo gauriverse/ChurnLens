@@ -7,7 +7,7 @@ from sqlalchemy.engine import make_url
 from backend.app.core.config import get_database_url
 
 url = make_url(get_database_url())
-dsn = url.render_as_string(hide_password=False)  # contains the password: never print it
+dsn = url.set(drivername="postgresql").render_as_string(hide_password=False) 
 host, port = url.host, url.port or 5432
 print("database host:", host)
 
