@@ -1,0 +1,1 @@
+export const CONTRACTS = ['Month-to-month', 'One year', 'Two year']

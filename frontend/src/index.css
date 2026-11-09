@@ -17,6 +17,8 @@
   --color-risk-high: #b91c1c;
   --color-assumed: #6d28d9;
   --color-assumed-soft: #f1ebfe;
+    --color-survival: #0f766e;
+  --color-survival-soft: #e6f4f1;
 }
 
 @layer base {

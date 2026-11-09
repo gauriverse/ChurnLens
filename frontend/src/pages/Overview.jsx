@@ -1,34 +1,60 @@
+import { useSearchParams } from 'react-router-dom'
 import { apiPath } from '../api/client'
+import BreakdownPanel from '../components/BreakdownPanel'
+import ContractFilter from '../components/ContractFilter'
+import KpiDefinitions from '../components/KpiDefinitions'
+import KpiStrip from '../components/KpiStrip'
 import LoadState from '../components/LoadState'
 import PageHeader from '../components/PageHeader'
+import { CONTRACTS } from '../constants'
 import { useApi } from '../hooks/useApi'
 
 export default function Overview() {
-  const { data, error, loading, waking, reload } = useApi(apiPath('/insights'))
-  const value = (key) => data?.kpis.find((kpi) => kpi.key === key)?.value
+  const [searchParams, setSearchParams] = useSearchParams()
+  const requested = searchParams.get('contract') ?? ''
+  const contract = CONTRACTS.includes(requested) ? requested : ''
+
+  const { data, error, loading, waking, reload } = useApi(
+    apiPath('/insights'),
+    contract ? { contract } : null,
+  )
+
+  const changeContract = (value) => setSearchParams(value ? { contract: value } : {})
+  const subtitle = data
+    ? `${data.dataset_name} · ${data.model_version} · analysis run ${data.analysis_run_id}`
+    : 'Customer churn at a glance'
 
   return (
     <section>
       <PageHeader
         title="Overview"
-        subtitle="A first live check of the connection to the API. The full dashboard is built in the next step."
+        subtitle={subtitle}
+        actions={<ContractFilter value={contract} options={CONTRACTS} onChange={changeContract} />}
       />
       <LoadState loading={loading} waking={waking} error={error} onRetry={reload}>
         {data && (
-          <dl className="grid max-w-md grid-cols-[1fr_auto] gap-x-6 gap-y-2 rounded-lg border border-line bg-panel p-5">
-            <dt className="text-muted">Customers</dt>
-            <dd className="text-right font-medium tabular-nums">
-              {value('total_customers').toLocaleString()}
-            </dd>
-            <dt className="text-muted">Churn rate (observed)</dt>
-            <dd className="text-right font-medium tabular-nums">
-              {(value('churn_rate') * 100).toFixed(1)}%
-            </dd>
-            <dt className="text-muted">Revenue at risk, 12 months (model estimate)</dt>
-            <dd className="text-right font-medium tabular-nums">
-              ${Math.round(value('revenue_at_risk_12m')).toLocaleString()}
-            </dd>
-          </dl>
+          <div className="space-y-6">
+            {contract && (
+              <p className="rounded-md bg-accent-soft px-3 py-2 text-accent">
+                Showing {contract} customers only. Survival figures use that contract's own curve
+                when available.
+              </p>
+            )}
+            <KpiStrip kpis={data.kpis} />
+            <KpiDefinitions kpis={data.kpis} basisNote={data.basis_note} />
+            <div className="grid gap-4 lg:grid-cols-2">
+              {!contract && (
+                <BreakdownPanel title="Churn by contract type" rows={data.breakdowns.by_contract} />
+              )}
+              <BreakdownPanel title="Churn by tenure (months)" rows={data.breakdowns.by_tenure} />
+              <BreakdownPanel title="Churn by payment method" rows={data.breakdowns.by_payment_method} />
+              <BreakdownPanel
+                title="Churn by customer segment"
+                rows={data.breakdowns.by_segment}
+                layout="rows"
+              />
+            </div>
+          </div>
         )}
       </LoadState>
     </section>
