@@ -17,3 +17,5 @@ artifacts/*.joblib
 *.egg-info/
 .pytest_cache/
 build/
+.env.*
+!.env.example
