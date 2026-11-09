@@ -1,18 +1,36 @@
 import { act, renderHook, waitFor } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { AxiosError } from 'axios'
+import { afterEach, describe, expect, it } from 'vitest'
 import { api } from '../api/client'
 import { useApi } from './useApi'
 
-vi.mock('../api/client', async (importOriginal) => {
-  const actual = await importOriginal()
-  return { ...actual, api: { get: vi.fn() } }
+const originalAdapter = api.defaults.adapter
+
+afterEach(() => {
+  api.defaults.adapter = originalAdapter
 })
 
-beforeEach(() => api.get.mockReset())
+const succeedWith = (data) => async (config) => ({
+  data,
+  status: 200,
+  statusText: 'OK',
+  headers: {},
+  config,
+})
+
+const failWith = (status, data) => async (config) => {
+  throw new AxiosError(
+    `Request failed with status code ${status}`,
+    'ERR_BAD_RESPONSE',
+    config,
+    null,
+    { status, statusText: 'Error', headers: {}, config, data },
+  )
+}
 
 describe('useApi', () => {
   it('starts loading, then returns the data', async () => {
-    api.get.mockResolvedValue({ data: { total: 7043 } })
+    api.defaults.adapter = succeedWith({ total: 7043 })
     const { result } = renderHook(() => useApi('/x'))
     expect(result.current.loading).toBe(true)
     await waitFor(() => expect(result.current.loading).toBe(false))
@@ -21,8 +39,8 @@ describe('useApi', () => {
   })
 
   it('turns a failed request into a readable message', async () => {
-    api.get.mockRejectedValue({
-      response: { status: 503, data: { detail: 'database temporarily unavailable, please retry' } },
+    api.defaults.adapter = failWith(503, {
+      detail: 'database temporarily unavailable, please retry',
     })
     const { result } = renderHook(() => useApi('/x'))
     await waitFor(() => expect(result.current.loading).toBe(false))
@@ -31,11 +49,15 @@ describe('useApi', () => {
   })
 
   it('fetches again when reload is called', async () => {
-    api.get.mockResolvedValueOnce({ data: 1 }).mockResolvedValueOnce({ data: 2 })
+    let calls = 0
+    api.defaults.adapter = async (config) => {
+      calls += 1
+      return succeedWith(calls)(config)
+    }
     const { result } = renderHook(() => useApi('/x'))
     await waitFor(() => expect(result.current.data).toBe(1))
     act(() => result.current.reload())
     await waitFor(() => expect(result.current.data).toBe(2))
-    expect(api.get).toHaveBeenCalledTimes(2)
+    expect(calls).toBe(2)
   })
 })
