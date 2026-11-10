@@ -6,6 +6,7 @@ import KpiDefinitions from '../components/KpiDefinitions'
 import KpiStrip from '../components/KpiStrip'
 import LoadState from '../components/LoadState'
 import PageHeader from '../components/PageHeader'
+import SurvivalPanel from '../components/SurvivalPanel'
 import { CONTRACTS } from '../constants'
 import { useApi } from '../hooks/useApi'
 
@@ -42,17 +43,21 @@ export default function Overview() {
             )}
             <KpiStrip kpis={data.kpis} />
             <KpiDefinitions kpis={data.kpis} basisNote={data.basis_note} />
-            <div className="grid gap-4 lg:grid-cols-2">
-              {!contract && (
-                <BreakdownPanel title="Churn by contract type" rows={data.breakdowns.by_contract} />
-              )}
-              <BreakdownPanel title="Churn by tenure (months)" rows={data.breakdowns.by_tenure} />
-              <BreakdownPanel title="Churn by payment method" rows={data.breakdowns.by_payment_method} />
-              <BreakdownPanel
-                title="Churn by customer segment"
-                rows={data.breakdowns.by_segment}
-                layout="rows"
-              />
+            <SurvivalPanel survival={data.survival} contract={contract} />
+            <div>
+              <h2 className="mb-2 text-sm font-medium text-muted">Churn breakdowns</h2>
+              <div className="grid gap-4 lg:grid-cols-2">
+                {!contract && (
+                  <BreakdownPanel title="Churn by contract type" rows={data.breakdowns.by_contract} />
+                )}
+                <BreakdownPanel title="Churn by tenure (months)" rows={data.breakdowns.by_tenure} />
+                <BreakdownPanel title="Churn by payment method" rows={data.breakdowns.by_payment_method} />
+                <BreakdownPanel
+                  title="Churn by customer segment"
+                  rows={data.breakdowns.by_segment}
+                  layout="rows"
+                />
+              </div>
             </div>
           </div>
         )}

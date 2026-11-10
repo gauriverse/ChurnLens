@@ -5,6 +5,7 @@ import { api } from '../api/client'
 import Overview from './Overview'
 
 vi.mock('../components/BreakdownChart', () => ({ default: () => null }))
+vi.mock('../components/SurvivalChart', () => ({ default: () => null }))
 
 const originalAdapter = api.defaults.adapter
 afterEach(() => {
@@ -135,5 +136,32 @@ describe('Overview', () => {
     expect(await screen.findByText('7,043')).toBeInTheDocument()
     expect(calls[0].params).toBeUndefined()
     expect(screen.getByLabelText('Contract')).toHaveValue('')
+  })
+
+    it('shows the survival curves section and its table', async () => {
+    serve({
+      ...INSIGHTS,
+      survival: {
+        available: true,
+        method: 'Kaplan-Meier',
+        note: 'Survival note from the API.',
+        curves: [
+          {
+            group: 'All customers',
+            customers: 7032,
+            events: 1869,
+            horizon_months: 72,
+            expected_active_months: 55.6,
+            survival_at: { 12: 0.801, 24: 0.702, 48: 0.603, 72: 0.504 },
+            points: [{ month: 0, survival: 1 }],
+          },
+        ],
+      },
+    })
+    renderOverview()
+    expect(await screen.findByRole('heading', { name: 'Survival curves' })).toBeInTheDocument()
+    expect(screen.getByText('Survival note from the API.')).toBeInTheDocument()
+    expect(screen.getByText('80.1%')).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: /All customers/ })).toBeInTheDocument()
   })
 })
