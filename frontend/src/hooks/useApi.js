@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { api, describeError } from '../api/client'
 
-export function useApi(path, params = null, { slowAfterMs = 5000 } = {}) {
+export function useApi(path, params = null, { slowAfterMs = 5000, keepPrevious = false } = {}) {
   const paramsKey = JSON.stringify(params ?? null)
   const [reloadCount, setReloadCount] = useState(0)
   const requestKey = `${path}|${paramsKey}|${reloadCount}`
@@ -30,13 +30,14 @@ export function useApi(path, params = null, { slowAfterMs = 5000 } = {}) {
 
   const reload = useCallback(() => setReloadCount((n) => n + 1), [])
 
-  
-  const loading = result.key !== requestKey
+  const pending = result.key !== requestKey
+  const showPrevious = pending && keepPrevious && result.key !== null && result.error === null
   return {
-    data: loading ? null : result.data,
-    error: loading ? null : result.error,
-    loading,
-    waking: loading && slowKey === requestKey,
+    data: !pending || showPrevious ? result.data : null,
+    error: pending ? null : result.error,
+    loading: pending && !showPrevious, // true only when there is nothing to show yet
+    refreshing: showPrevious,
+    waking: pending && slowKey === requestKey,
     reload,
   }
 }

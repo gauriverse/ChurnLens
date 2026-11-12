@@ -12,9 +12,12 @@
   --color-accent-soft: #e8efff;
 
   /* reserved for the next pages */
-  --color-risk-low: #15803d;
+  --color-risk-low: #166534;
+  --color-risk-low-soft: #e7f5ec;
   --color-risk-medium: #b45309;
+  --color-risk-medium-soft: #fdf2e0;
   --color-risk-high: #b91c1c;
+  --color-risk-high-soft: #fdeaea;
   --color-assumed: #6d28d9;
   --color-assumed-soft: #f1ebfe;
     --color-survival: #0f766e;

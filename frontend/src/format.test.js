@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { EMPTY, formatPercent, formatValue } from './format'
+import { EMPTY, formatMoney, formatPercent, formatValue } from './format'
 
 describe('formatValue', () => {
   it('formats each unit', () => {
@@ -26,5 +26,13 @@ describe('formatPercent', () => {
     expect(formatPercent(0.4271)).toBe('42.7%')
     expect(formatPercent(0.4271, 0)).toBe('43%')
     expect(formatPercent(0, 1)).toBe('0.0%')
+  })
+})
+
+describe('formatMoney', () => {
+  it('always shows cents', () => {
+    expect(formatMoney(29.85)).toBe('$29.85')
+    expect(formatMoney(105)).toBe('$105.00')
+    expect(formatMoney(null)).toBe(EMPTY)
   })
 })

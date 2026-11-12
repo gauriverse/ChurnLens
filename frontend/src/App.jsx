@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
 import Placeholder from './components/Placeholder'
+import CustomerIntelligence from './pages/CustomerIntelligence'
 import Overview from './pages/Overview'
 
 export default function App() {
@@ -8,10 +9,7 @@ export default function App() {
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<Overview />} />
-        <Route
-          path="customers"
-          element={<Placeholder title="Customer Intelligence">Risk-ranked customers with search and filters.</Placeholder>}
-        />
+        <Route path="customers" element={<CustomerIntelligence />} />
         <Route
           path="customers/:customerId"
           element={<Placeholder title="Customer Profile">One customer: probability, reasons, segment and recommendation.</Placeholder>}

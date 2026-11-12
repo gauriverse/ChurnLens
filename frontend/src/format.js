@@ -1,14 +1,16 @@
 const integer = new Intl.NumberFormat('en-US')
-const dollars = new Intl.NumberFormat('en-US', {
+const wholeDollars = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
   maximumFractionDigits: 0,
 })
+const exactDollars = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
 
 export const EMPTY = '—'
 
 export const formatInteger = (value) => (value == null ? EMPTY : integer.format(value))
-export const formatCurrency = (value) => (value == null ? EMPTY : dollars.format(value))
+export const formatCurrency = (value) => (value == null ? EMPTY : wholeDollars.format(value))
+export const formatMoney = (value) => (value == null ? EMPTY : exactDollars.format(value))
 export const formatPercent = (value, digits = 1) =>
   value == null ? EMPTY : `${(value * 100).toFixed(digits)}%`
 
