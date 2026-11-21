@@ -42,7 +42,7 @@ describe('app shell', () => {
 
   it('shows the profile page for a customer address and keeps Customer Intelligence highlighted', () => {
     renderAt('/customers/7590-VHVEG')
-    expect(screen.getByRole('heading', { name: 'Customer Profile' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: '7590-VHVEG' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Customer Intelligence' })).toHaveAttribute('aria-current', 'page')
   })
 

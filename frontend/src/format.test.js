@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { EMPTY, formatMoney, formatPercent, formatValue } from './format'
+import { EMPTY, formatMonths, formatMoney, formatPercent, formatSigned, formatValue } from './format'
 
 describe('formatValue', () => {
   it('formats each unit', () => {
@@ -34,5 +34,23 @@ describe('formatMoney', () => {
     expect(formatMoney(29.85)).toBe('$29.85')
     expect(formatMoney(105)).toBe('$105.00')
     expect(formatMoney(null)).toBe(EMPTY)
+  })
+})
+
+describe('formatMonths', () => {
+  it('uses the singular for one month', () => {
+    expect(formatMonths(1)).toBe('1 month')
+    expect(formatMonths(0)).toBe('0 months')
+    expect(formatMonths(1234)).toBe('1,234 months')
+    expect(formatMonths(null)).toBe(EMPTY)
+  })
+})
+
+describe('formatSigned', () => {
+  it('always shows the sign of a contribution', () => {
+    expect(formatSigned(1.478)).toBe('+1.48')
+    expect(formatSigned(-0.661)).toBe('-0.66')
+    expect(formatSigned(0)).toBe('0.00')
+    expect(formatSigned(null)).toBe(EMPTY)
   })
 })

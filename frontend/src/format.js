@@ -13,6 +13,10 @@ export const formatCurrency = (value) => (value == null ? EMPTY : wholeDollars.f
 export const formatMoney = (value) => (value == null ? EMPTY : exactDollars.format(value))
 export const formatPercent = (value, digits = 1) =>
   value == null ? EMPTY : `${(value * 100).toFixed(digits)}%`
+export const formatMonths = (value) =>
+  value == null ? EMPTY : `${formatInteger(value)} ${value === 1 ? 'month' : 'months'}`
+export const formatSigned = (value, digits = 2) =>
+  value == null ? EMPTY : `${value > 0 ? '+' : ''}${value.toFixed(digits)}`
 
 
 export function formatValue(value, unit) {
