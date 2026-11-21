@@ -4,6 +4,7 @@ import Placeholder from './components/Placeholder'
 import CustomerIntelligence from './pages/CustomerIntelligence'
 import CustomerProfile from './pages/CustomerProfile'
 import Overview from './pages/Overview'
+import Segments from './pages/Segments'
 
 export default function App() {
   return (
@@ -12,14 +13,7 @@ export default function App() {
         <Route index element={<Overview />} />
         <Route path="customers" element={<CustomerIntelligence />} />
         <Route path="customers/:customerId" element={<CustomerProfile />} />
-        <Route
-          path="customers/:customerId"
-          element={<Placeholder title="Customer Profile">One customer: probability, reasons, segment and recommendation.</Placeholder>}
-        />
-        <Route
-          path="segments"
-          element={<Placeholder title="Customer Segments">The five segments with their size, churn and revenue at risk.</Placeholder>}
-        />
+        <Route path="segments" element={<Segments />} />
         <Route
           path="simulator"
           element={<Placeholder title="Retention Simulator">What-if retention campaigns. Every figure is hypothetical.</Placeholder>}
